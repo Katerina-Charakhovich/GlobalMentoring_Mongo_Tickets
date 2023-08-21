@@ -18,7 +18,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/ticket_booking
     username: postgres
-    password: pass
+    password: admin
     driver-class-name: org.postgresql.Driver
 
 logging:
