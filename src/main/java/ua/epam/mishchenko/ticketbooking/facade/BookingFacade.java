@@ -18,7 +18,7 @@ public interface BookingFacade {
      * Gets event by its id.
      * @return Event.
      */
-    Event getEventById(long eventId);
+    Event getEventById(String eventId);
 
     /**
      * Get list of events by matching title. Title is matched using 'contains' approach.
@@ -59,13 +59,13 @@ public interface BookingFacade {
      * @param eventId Event id.
      * @return Flag that shows whether event has been deleted.
      */
-    boolean deleteEvent(long eventId);
+    boolean deleteEvent(String eventId);
 
     /**
      * Gets user by its id.
      * @return User.
      */
-    User getUserById(long userId);
+    User getUserById(String userId);
 
     /**
      * Gets user by its email. Email is strictly matched.
@@ -102,7 +102,7 @@ public interface BookingFacade {
      * @param userId User id.
      * @return Flag that shows whether user has been deleted.
      */
-    boolean deleteUser(long userId);
+    boolean deleteUser(String userId);
 
     /**
      * Book ticket for a specified event on behalf of specified user.
@@ -113,31 +113,31 @@ public interface BookingFacade {
      * @return Booked ticket object.
      * @throws IllegalStateException if this place has already been booked.
      */
-    Ticket bookTicket(long userId, long eventId, int place, Category category);
+    Ticket bookTicket(String userId, String eventId, int place, Category category);
 
     /**
      * Get all booked tickets for specified user. Tickets should be sorted by event date in descending order.
-     * @param user User
+     * @param userId User
      * @param pageSize Pagination param. Number of tickets to return on a page.
      * @param pageNum Pagination param. Number of the page to return. Starts from 1.
      * @return List of Ticket objects.
      */
-    List<Ticket> getBookedTickets(User user, int pageSize, int pageNum);
+    List<Ticket> getBookedTicketsByUserId(String userId, int pageSize, int pageNum);
 
     /**
      * Get all booked tickets for specified event. Tickets should be sorted in by user email in ascending order.
-     * @param event Event
+     * @param eventId Event
      * @param pageSize Pagination param. Number of tickets to return on a page.
      * @param pageNum Pagination param. Number of the page to return. Starts from 1.
      * @return List of Ticket objects.
      */
-    List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum);
+    List<Ticket> getBookedTicketsByEventId(String eventId, int pageSize, int pageNum);
 
     /**
      * Cancel ticket with a specified id.
      * @param ticketId Ticket id.
      * @return Flag whether anything has been canceled.
      */
-    boolean cancelTicket(long ticketId);
+    boolean cancelTicket(String ticketId);
 
 }

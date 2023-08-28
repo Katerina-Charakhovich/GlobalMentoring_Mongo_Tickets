@@ -1,52 +1,45 @@
 package ua.epam.mishchenko.ticketbooking.model;
 
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
  * The type Ticket.
  */
-@Entity
-@Table(name = "tickets")
-@Cacheable
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Document(collection = "tickets")
 public class Ticket {
 
     /**
      * The Id.
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     /**
      * The User entity.
      */
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String userId;
 
     /**
      * The Event entity.
      */
-    @ManyToOne
-    @JoinColumn(name = "event_id")
-    private Event event;
+    @Field
+    private String eventId;
 
     /**
      * The Place.
      */
-    @Column(name = "place", nullable = false)
+    @Field
     private Integer place;
 
     /**
      * The Category.
      */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "category", nullable = false)
     private Category category;
 
     /**
@@ -59,30 +52,32 @@ public class Ticket {
      * Instantiates a new Ticket.
      *
      * @param id       the id
-     * @param user     the user entity
-     * @param event    the event entity
+     * @param eventId    the event entity
      * @param place    the place
      * @param category the category
      */
-    public Ticket(Long id, User user, Event event, int place, Category category) {
+    public Ticket(String id,String userId, String eventId, int place, Category category) {
         this.id = id;
-        this.user = user;
-        this.event = event;
+        this.userId = userId;
+        this.eventId = eventId;
         this.place = place;
         this.category = category;
     }
 
+    public Ticket(String id) {
+        this.id = id;
+
+    }
     /**
      * Instantiates a new Ticket.
      *
-     * @param user     the user entity
-     * @param event    the event entity
+     * @param eventId    the event entity
      * @param place    the place
      * @param category the category
      */
-    public Ticket(User user, Event event, int place, Category category) {
-        this.user = user;
-        this.event = event;
+    public Ticket(String userId, String eventId, int place, Category category) {
+        this.userId = userId;
+        this.eventId = eventId;
         this.place = place;
         this.category = category;
     }
@@ -92,7 +87,7 @@ public class Ticket {
      *
      * @return the id
      */
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -101,7 +96,7 @@ public class Ticket {
      *
      * @param id the id
      */
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -110,35 +105,17 @@ public class Ticket {
      *
      * @return the event entity
      */
-    public Event getEvent() {
-        return event;
+    public String getEventId() {
+        return eventId;
     }
 
     /**
      * Sets event entity.
      *
-     * @param event the event id
+     * @param eventId the event id
      */
-    public void setEvent(Event event) {
-        this.event = event;
-    }
-
-    /**
-     * Gets user entity.
-     *
-     * @return the user entity
-     */
-    public User getUser() {
-        return user;
-    }
-
-    /**
-     * Sets user entity.
-     *
-     * @param user the user entity
-     */
-    public void setUser(User user) {
-        this.user = user;
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
     }
 
     /**
@@ -177,6 +154,18 @@ public class Ticket {
         this.place = place;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setPlace(Integer place) {
+        this.place = place;
+    }
+
     /**
      * Equals boolean.
      *
@@ -187,7 +176,7 @@ public class Ticket {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ticket ticket = (Ticket) o;
-        return Objects.equals(id, ticket.id) && Objects.equals(user, ticket.user) && Objects.equals(event, ticket.event) && Objects.equals(place, ticket.place) && category == ticket.category;
+        return Objects.equals(id, ticket.id) && Objects.equals(eventId, ticket.eventId) && Objects.equals(place, ticket.place) && category == ticket.category;
     }
 
     /**
@@ -196,7 +185,7 @@ public class Ticket {
      * @return the int
      */
     public int hashCode() {
-        return Objects.hash(id, user, event, place, category);
+        return Objects.hash(id, eventId, place, category);
     }
 
     /**
@@ -204,13 +193,5 @@ public class Ticket {
      *
      * @return the string
      */
-    public String toString() {
-        return "{" +
-                "'id' : " + id +
-                ", 'userId' : " + user.getId() +
-                ", 'eventId' : " + event.getId() +
-                ", 'place' : " + place +
-                ", 'category' : '" + category +
-                "'}";
-    }
+
 }

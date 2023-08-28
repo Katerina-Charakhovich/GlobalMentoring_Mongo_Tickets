@@ -2,14 +2,9 @@ package ua.epam.mishchenko.ticketbooking.web.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ua.epam.mishchenko.ticketbooking.facade.impl.BookingFacadeImpl;
 import ua.epam.mishchenko.ticketbooking.model.User;
@@ -51,7 +46,7 @@ public class UsersController {
      * @return the model and view
      */
     @GetMapping("/{id}")
-    public ModelAndView showUserById(@PathVariable long id) {
+    public ModelAndView showUserById(@PathVariable String id) {
         log.info("Showing user by id: {}", id);
         Map<String, Object> model = new HashMap<>();
         User userById = bookingFacade.getUserById(id);
@@ -85,8 +80,8 @@ public class UsersController {
      */
     @GetMapping("/name/{name}")
     public ModelAndView showUsersByName(@PathVariable String name,
-                                        @RequestParam int pageSize,
-                                        @RequestParam int pageNum) {
+                                        @RequestParam  int pageSize,
+                                        @RequestParam  int pageNum) {
         log.info("Showing users by name: {}", name);
         Map<String, Object> model = new HashMap<>();
         List<User> usersByName = bookingFacade.getUsersByName(name, pageSize, pageNum);
@@ -124,20 +119,17 @@ public class UsersController {
     /**
      * Create user model and view.
      *
-     * @param name  the name
-     * @param email the email
      * @return the model and view
      */
     @PostMapping
-    public ModelAndView createUser(@RequestParam String name,
-                                   @RequestParam String email) {
-        log.info("Creating user with name={} and email={}", name, email);
+    public ModelAndView createUser(@RequestBody User user) {
+        log.info("Creating user :", user.toString());
         Map<String, Object> model = new HashMap<>();
-        User user = bookingFacade.createUser(createUserEntityWithoutId(name, email));
+        user = bookingFacade.createUser(user);
         if (isNull(user)) {
             model.put("message",
-                    "Can not to create user with name - " + name + " and email - " + email);
-            log.info("Can not to create user with name={} and email={}", name, email);
+                    "Can not to create user with name - " + user.getName() + " and email - " + user.getEmail());
+            log.info("Can not to create user with name={} and email={}", user.getName(), user.getEmail());
         } else {
             model.put("user", user);
             log.info("The user successfully created");
@@ -168,7 +160,7 @@ public class UsersController {
      * @return the model and view
      */
     @PutMapping
-    public ModelAndView updateUser(@RequestParam long id,
+    public ModelAndView updateUser(@RequestParam String id,
                                    @RequestParam String name,
                                    @RequestParam String email) {
         log.info("Updating user with id: {}", id);
@@ -192,7 +184,7 @@ public class UsersController {
      * @param email the email
      * @return the user
      */
-    private User createUserEntityWithId(long id, String name, String email) {
+    private User createUserEntityWithId(String id, String name, String email) {
         User user = createUserEntityWithoutId(name, email);
         user.setId(id);
         return user;
@@ -205,7 +197,7 @@ public class UsersController {
      * @return the model and view
      */
     @DeleteMapping("/{id}")
-    public ModelAndView deleteUser(@PathVariable long id) {
+    public ModelAndView deleteUser(@PathVariable String id) {
         log.info("Deleting the user with id: {}", id);
         Map<String, Object> model = new HashMap<>();
         boolean isUserRemoved = bookingFacade.deleteUser(id);

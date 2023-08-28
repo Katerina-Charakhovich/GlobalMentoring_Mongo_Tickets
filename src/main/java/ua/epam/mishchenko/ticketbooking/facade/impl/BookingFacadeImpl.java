@@ -6,13 +6,10 @@ import ua.epam.mishchenko.ticketbooking.model.Category;
 import ua.epam.mishchenko.ticketbooking.model.Event;
 import ua.epam.mishchenko.ticketbooking.model.Ticket;
 import ua.epam.mishchenko.ticketbooking.model.User;
-import ua.epam.mishchenko.ticketbooking.model.UserAccount;
 import ua.epam.mishchenko.ticketbooking.service.EventService;
 import ua.epam.mishchenko.ticketbooking.service.TicketService;
-import ua.epam.mishchenko.ticketbooking.service.UserAccountService;
 import ua.epam.mishchenko.ticketbooking.service.UserService;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -38,24 +35,17 @@ public class BookingFacadeImpl implements BookingFacade {
     private final UserService userService;
 
     /**
-     * The User Account service.
-     */
-    private final UserAccountService userAccountService;
-
-    /**
      * Instantiates a new Booking facade.
      *
      * @param eventService       the event service
      * @param userService        the user service
      * @param ticketService      the ticket service
-     * @param userAccountService the user account service
      */
-    public BookingFacadeImpl(EventService eventService, UserService userService, TicketService ticketService,
-                             UserAccountService userAccountService) {
+    public BookingFacadeImpl(EventService eventService, UserService userService, TicketService ticketService
+                             ) {
         this.eventService = eventService;
         this.ticketService = ticketService;
         this.userService = userService;
-        this.userAccountService = userAccountService;
     }
 
     /**
@@ -65,7 +55,7 @@ public class BookingFacadeImpl implements BookingFacade {
      * @return the event by id
      */
     @Override
-    public Event getEventById(long eventId) {
+    public Event getEventById(String eventId) {
         return eventService.getEventById(eventId);
     }
 
@@ -124,7 +114,7 @@ public class BookingFacadeImpl implements BookingFacade {
      * @return the boolean
      */
     @Override
-    public boolean deleteEvent(long eventId) {
+    public boolean deleteEvent(String eventId) {
         return eventService.deleteEvent(eventId);
     }
 
@@ -134,8 +124,8 @@ public class BookingFacadeImpl implements BookingFacade {
      * @param userId the user id
      * @return the user by id
      */
-    @Override
-    public User getUserById(long userId) {
+
+    public User getUserById(String userId) {
         return userService.getUserById(userId);
     }
 
@@ -192,7 +182,7 @@ public class BookingFacadeImpl implements BookingFacade {
      * @return the boolean
      */
     @Override
-    public boolean deleteUser(long userId) {
+    public boolean deleteUser(String userId) {
         return userService.deleteUser(userId);
     }
 
@@ -206,34 +196,34 @@ public class BookingFacadeImpl implements BookingFacade {
      * @return the ticket
      */
     @Override
-    public Ticket bookTicket(long userId, long eventId, int place, Category category) {
+    public Ticket bookTicket(String userId, String eventId, int place, Category category) {
         return ticketService.bookTicket(userId, eventId, place, category);
     }
 
     /**
      * Gets booked tickets.
      *
-     * @param user     the user
+     * @param userId     the user
      * @param pageSize the page size
      * @param pageNum  the page num
      * @return the booked tickets
      */
     @Override
-    public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
-        return ticketService.getBookedTickets(user, pageSize, pageNum);
+    public List<Ticket> getBookedTicketsByUserId(String userId, int pageSize, int pageNum) {
+        return ticketService.getBookedTicketsByUserId(userId, pageSize, pageNum);
     }
 
     /**
      * Gets booked tickets.
      *
-     * @param event    the event
+     * @param eventId    the event
      * @param pageSize the page size
      * @param pageNum  the page num
      * @return the booked tickets
      */
     @Override
-    public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
-        return ticketService.getBookedTickets(event, pageSize, pageNum);
+    public List<Ticket> getBookedTicketsByEventId(String eventId, int pageSize, int pageNum) {
+        return ticketService.getBookedTickets(eventId, pageSize, pageNum);
     }
 
     /**
@@ -243,11 +233,8 @@ public class BookingFacadeImpl implements BookingFacade {
      * @return the boolean
      */
     @Override
-    public boolean cancelTicket(long ticketId) {
+    public boolean cancelTicket(String ticketId) {
         return ticketService.cancelTicket(ticketId);
     }
 
-    public UserAccount refillUserAccount(long userId, BigDecimal money) {
-        return userAccountService.refillAccount(userId, money);
-    }
 }

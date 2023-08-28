@@ -1,9 +1,7 @@
 package ua.epam.mishchenko.ticketbooking.service;
 
 import ua.epam.mishchenko.ticketbooking.model.Category;
-import ua.epam.mishchenko.ticketbooking.model.Event;
 import ua.epam.mishchenko.ticketbooking.model.Ticket;
-import ua.epam.mishchenko.ticketbooking.model.User;
 
 import java.util.List;
 
@@ -21,7 +19,7 @@ public interface TicketService {
      * @param category the category
      * @return the ticket
      */
-    Ticket bookTicket(long userId, long eventId, int place, Category category);
+    Ticket bookTicket(String userId, String eventId, int place, Category category);
 
     /**
      * Gets booked tickets.
@@ -31,7 +29,7 @@ public interface TicketService {
      * @param pageNum  the page num
      * @return the booked tickets
      */
-    List<Ticket> getBookedTickets(User user, int pageSize, int pageNum);
+    List<Ticket> getBookedTicketsByUserId(String userId, int pageSize, int pageNum);
 
     /**
      * Gets booked tickets.
@@ -41,7 +39,7 @@ public interface TicketService {
      * @param pageNum  the page num
      * @return the booked tickets
      */
-    List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum);
+    List<Ticket> getBookedTickets(String event, int pageSize, int pageNum);
 
     /**
      * Cancel ticket boolean.
@@ -49,5 +47,5 @@ public interface TicketService {
      * @param ticketId the ticket id
      * @return the boolean
      */
-    boolean cancelTicket(long ticketId);
+    boolean cancelTicket(String ticketId);
 }

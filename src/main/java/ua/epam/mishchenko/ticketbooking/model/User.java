@@ -1,48 +1,44 @@
 package ua.epam.mishchenko.ticketbooking.model;
 
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * The type User.
  */
-@Entity
-@Table(name = "users")
-@Cacheable
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Document(collection = "users")
 public class User {
 
     /**
      * The Id.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     /**
      * The Name.
      */
-    @Column(name = "name", nullable = false)
     private String name;
 
     /**
      * The Email.
      */
-    @Column(name = "email", nullable = false)
     private String email;
 
     /**
      * The list of user tickets.
      */
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private final List<Ticket> tickets = new ArrayList<>();
+    private  List<String> tickets;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UserAccount userAccount;
+    private BigDecimal account;
 
     /**
      * Instantiates a new User.
@@ -56,7 +52,7 @@ public class User {
      * @param name  the name
      * @param email the email
      */
-    public User(Long id, String name, String email) {
+    public User(String id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -78,7 +74,7 @@ public class User {
      *
      * @return the id
      */
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -87,7 +83,7 @@ public class User {
      *
      * @param id the id
      */
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -131,24 +127,20 @@ public class User {
      * Gets user tickets.
      * @return tickets
      */
-    public List<Ticket> getTickets() {
+    public List<String> getTickets() {
         return tickets;
     }
 
-    /**
-     * Gets user account.
-     * @return userAccount
-     */
-    public UserAccount getUserAccount() {
-        return userAccount;
+    public void setTickets(List<String> tickets) {
+        this.tickets = tickets;
     }
 
-    /**
-     * Sets user account.
-     * @param userAccount the user account
-     */
-    public void setUserAccount(UserAccount userAccount) {
-        this.userAccount = userAccount;
+    public BigDecimal getAccount() {
+        return account;
+    }
+
+    public void setAccount(BigDecimal userAccount) {
+        this.account = userAccount;
     }
 
     /**
@@ -180,13 +172,5 @@ public class User {
      *
      * @return the string
      */
-    @Override
-    public String toString() {
-        return "{" +
-                "'id' : " + id +
-                ", 'name' : '" + name + '\'' +
-                ", 'email' : '" + email + '\'' +
-                '}';
-    }
 }
 

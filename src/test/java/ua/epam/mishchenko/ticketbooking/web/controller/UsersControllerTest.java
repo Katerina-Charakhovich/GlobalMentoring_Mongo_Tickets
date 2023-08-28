@@ -17,7 +17,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -39,11 +38,11 @@ public class UsersControllerTest {
 
     @Test
     public void showUserByIdWithExistingUserIdShouldReturnModelAndViewWithUser() {
-        when(bookingFacade.getUserById(anyLong())).thenReturn(new User());
+        when(bookingFacade.getUserById(anyString())).thenReturn(new User());
 
-        ModelAndView actualModelAndView = usersController.showUserById(1L);
+        ModelAndView actualModelAndView = usersController.showUserById("1L");
 
-        verify(bookingFacade, times(1)).getUserById(anyLong());
+        verify(bookingFacade, times(1)).getUserById(anyString());
 
         assertEquals("user", actualModelAndView.getViewName());
         assertTrue(actualModelAndView.getModelMap().containsAttribute("user"));
@@ -52,11 +51,11 @@ public class UsersControllerTest {
 
     @Test
     public void showUserByIdWithNotExistingUserIdShouldReturnModelAndViewWithMessage() {
-        when(bookingFacade.getUserById(anyLong())).thenReturn(null);
+        when(bookingFacade.getUserById(anyString())).thenReturn(null);
 
-        ModelAndView actualModelAndView = usersController.showUserById(1L);
+        ModelAndView actualModelAndView = usersController.showUserById("1L");
 
-        verify(bookingFacade, times(1)).getUserById(anyLong());
+        verify(bookingFacade, times(1)).getUserById(anyString());
 
         ModelMap actualModelMap = actualModelAndView.getModelMap();
 
@@ -133,7 +132,10 @@ public class UsersControllerTest {
     public void createUserWithCorrectParametersShouldReturnModelAndViewWithUser() {
         when(bookingFacade.createUser(any())).thenReturn(new User());
 
-        ModelAndView actualModelAndView = usersController.createUser("Test Name", "test@mail.com");
+        User user = new User();
+        user.setName("Test Name");
+        user.setEmail("test@mail.com");
+        ModelAndView actualModelAndView = usersController.createUser(user);
 
         verify(bookingFacade, times(1)).createUser(any());
 
@@ -148,7 +150,11 @@ public class UsersControllerTest {
     public void createUserWithWrongParametersShouldReturnModelAndViewWithMessage() {
         when(bookingFacade.createUser(any())).thenReturn(null);
 
-        ModelAndView actualModelAndView = usersController.createUser("Test Name", "test@mail.com");
+        User user = new User();
+        user.setName("Test Name");
+        user.setEmail("test@mail.com");
+
+        ModelAndView actualModelAndView = usersController.createUser(user);
 
         verify(bookingFacade, times(1)).createUser(any());
 
@@ -157,14 +163,15 @@ public class UsersControllerTest {
         assertEquals("user", actualModelAndView.getViewName());
         assertFalse(actualModelMap.containsAttribute("user"));
         assertTrue(actualModelMap.containsAttribute("message"));
-        assertEquals("Can not to create user with name - Test Name and email - test@mail.com", actualModelMap.getAttribute("message"));
+        assertEquals("Can not to create user with name - Test Name and email - test@mail.com",
+                actualModelMap.getAttribute("message"));
     }
 
     @Test
     public void updateUserWithCorrectParametersShouldReturnModelAndViewWithUser() {
         when(bookingFacade.updateUser(any())).thenReturn(new User());
 
-        ModelAndView actualModelAndView = usersController.updateUser(1L, "Test Name", "test@mail.com");
+        ModelAndView actualModelAndView = usersController.updateUser("1L", "Test Name", "test@mail.com");
 
         verify(bookingFacade, times(1)).updateUser(any());
 
@@ -179,7 +186,7 @@ public class UsersControllerTest {
     public void updateUserWithWrongParametersShouldReturnModelAndViewWithMessage() {
         when(bookingFacade.updateUser(any())).thenReturn(null);
 
-        ModelAndView actualModelAndView = usersController.updateUser(1L, "Test Name", "test@mail.com");
+        ModelAndView actualModelAndView = usersController.updateUser("1L", "Test Name", "test@mail.com");
 
         verify(bookingFacade, times(1)).updateUser(any());
 
@@ -188,36 +195,36 @@ public class UsersControllerTest {
         assertEquals("user", actualModelAndView.getViewName());
         assertFalse(actualModelMap.containsAttribute("user"));
         assertTrue(actualModelMap.containsAttribute("message"));
-        assertEquals("Can not to update user with id: 1", actualModelMap.getAttribute("message"));
+        assertEquals("Can not to update user with id: 1L", actualModelMap.getAttribute("message"));
     }
 
     @Test
     public void deleteUserWithExistingUserIdShouldReturnModelAndViewWithPositiveMessage() {
-        when(bookingFacade.deleteUser(anyLong())).thenReturn(true);
+        when(bookingFacade.deleteUser(anyString())).thenReturn(true);
 
-        ModelAndView actualModelAndView = usersController.deleteUser(1L);
+        ModelAndView actualModelAndView = usersController.deleteUser("1L");
 
-        verify(bookingFacade, times(1)).deleteUser(anyLong());
+        verify(bookingFacade, times(1)).deleteUser(anyString());
 
         ModelMap actualModelMap = actualModelAndView.getModelMap();
 
         assertEquals("user", actualModelAndView.getViewName());
         assertTrue(actualModelMap.containsAttribute("message"));
-        assertEquals("The user with id: 1 successfully removed", actualModelMap.getAttribute("message"));
+        assertEquals("The user with id: 1L successfully removed", actualModelMap.getAttribute("message"));
     }
 
     @Test
     public void deleteUserWithNotExistingUserIdShouldReturnModelAndViewWithNegativeMessage() {
-        when(bookingFacade.deleteUser(anyLong())).thenReturn(false);
+        when(bookingFacade.deleteUser(anyString())).thenReturn(false);
 
-        ModelAndView actualModelAndView = usersController.deleteUser(1L);
+        ModelAndView actualModelAndView = usersController.deleteUser("1L");
 
-        verify(bookingFacade, times(1)).deleteUser(anyLong());
+        verify(bookingFacade, times(1)).deleteUser(anyString());
 
         ModelMap actualModelMap = actualModelAndView.getModelMap();
 
         assertEquals("user", actualModelAndView.getViewName());
         assertTrue(actualModelMap.containsAttribute("message"));
-        assertEquals("The user with id: 1 not removed", actualModelMap.getAttribute("message"));
+        assertEquals("The user with id: 1L not removed", actualModelMap.getAttribute("message"));
     }
 }

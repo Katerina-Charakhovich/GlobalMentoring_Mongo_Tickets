@@ -33,36 +33,36 @@ public class UserServiceImplTest {
 
     @Test
     public void getUserByIdWithExistsIdShouldBeOk() {
-        User expectedUser = new User(3L, "Max", "max@gmail.com");
+        User expectedUser = new User("3L", "Max", "max@gmail.com");
 
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(expectedUser));
+        when(userRepository.findById(anyString())).thenReturn(Optional.of(expectedUser));
 
-        User actualUser = userService.getUserById(3L);
+        User actualUser = userService.getUserById("3L");
 
         assertEquals(expectedUser, actualUser);
     }
 
     @Test
     public void getUserByIdWithExceptionShouldReturnNull() {
-        when(userRepository.findById(anyLong())).thenThrow(RuntimeException.class);
+        when(userRepository.findById(anyString())).thenThrow(RuntimeException.class);
 
-        User actualUser = userService.getUserById(10L);
+        User actualUser = userService.getUserById("10L");
 
         assertNull(actualUser);
     }
 
     @Test
     public void getUserByIdWithNotExistIdShouldReturnNull() {
-        when(userRepository.findById(anyLong())).thenReturn(null);
+        when(userRepository.findById(anyString())).thenReturn(null);
 
-        User actualUser = userService.getUserById(10L);
+        User actualUser = userService.getUserById("10L");
 
         assertNull(actualUser);
     }
 
     @Test
     public void getUserByEmailWithExistsEmailShouldBeOk() {
-        User expectedUser = new User(3L, "Max", "max@gmail.com");
+        User expectedUser = new User("3L", "Max", "max@gmail.com");
 
         when(userRepository.getByEmail(anyString())).thenReturn(Optional.of(expectedUser));
 
@@ -99,8 +99,8 @@ public class UserServiceImplTest {
     @Test
     public void getUserByNameWithExistsNameShouldBeOk() {
         List<User> content = Arrays.asList(
-                new User(3L, "Max", "max@gmail.com"),
-                new User(4L, "Max", "max123@gmail.com")
+                new User("3L", "Max", "max@gmail.com"),
+                new User("4L", "Max", "max123@gmail.com")
         );
         Page<User> page = new PageImpl<>(content);
 
@@ -129,7 +129,7 @@ public class UserServiceImplTest {
 
     @Test
     public void createUserWithUserShouldBeOk() {
-        User expectedUser = new User(1L, "Test User", "testuser@gmail.com");
+        User expectedUser = new User("1L", "Test User", "testuser@gmail.com");
 
         when(userRepository.save(any())).thenReturn(expectedUser);
 
@@ -149,7 +149,7 @@ public class UserServiceImplTest {
 
     @Test
     public void updateUserWithExistsUserShouldBeOk() {
-        User expectedUser = new User(1L, "Test User", "testuser@gmail.com");
+        User expectedUser = new User("1L", "Test User", "testuser@gmail.com");
 
         when(userRepository.save(any())).thenReturn(expectedUser);
 
@@ -169,16 +169,16 @@ public class UserServiceImplTest {
 
     @Test
     public void deleteUserExistsUserShouldReturnTrue() {
-        boolean actualIsDeleted = userService.deleteUser(2);
+        boolean actualIsDeleted = userService.deleteUser("2");
 
         assertTrue(actualIsDeleted);
     }
 
     @Test
     public void deleteUserWhichNotExistsShouldReturnFalse() {
-        doThrow(new RuntimeException()).when(userRepository).deleteById(anyLong());
+        doThrow(new RuntimeException()).when(userRepository).deleteById(anyString());
 
-        boolean isRemoved = userService.deleteUser(10L);
+        boolean isRemoved = userService.deleteUser("10L");
 
         assertFalse(isRemoved);
     }
