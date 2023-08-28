@@ -2,17 +2,20 @@ package ua.epam.mishchenko.ticketbooking.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import ua.epam.mishchenko.ticketbooking.model.Category;
 import ua.epam.mishchenko.ticketbooking.model.Ticket;
 
 @Repository
-public interface TicketRepository extends CrudRepository<Ticket, Long> {
+public interface TicketRepository extends MongoRepository<Ticket, String> {
 
-    Page<Ticket> getAllByUserId(Pageable pageable, Long userId);
+    Page<Ticket> getAllByUserId(Pageable pageable, String userId);
 
-    Page<Ticket> getAllByEventId(Pageable pageable, Long eventId);
+    Page<Ticket> getAllByEventId(Pageable pageable, String eventId);
 
-    Boolean existsByEventIdAndPlaceAndCategory(Long eventId, Integer place, Category category);
+    Boolean existsByEventIdAndPlaceAndCategory(String eventId, Integer place, Category category);
+
+
 }

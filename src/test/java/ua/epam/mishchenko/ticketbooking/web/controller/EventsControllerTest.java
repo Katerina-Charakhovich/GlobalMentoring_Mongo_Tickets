@@ -19,7 +19,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -41,13 +40,13 @@ public class EventsControllerTest {
 
     @Test
     public void showEventByIdWithExistingEventIdShouldReturnModelAndViewWithEvent() {
-        Event event = new Event(1L, "Test event", new Date(System.currentTimeMillis()), BigDecimal.ONE);
+        Event event = new Event("1L", "Test event", new Date(System.currentTimeMillis()), BigDecimal.ONE);
 
-        when(bookingFacade.getEventById(anyLong())).thenReturn(event);
+        when(bookingFacade.getEventById(anyString())).thenReturn(event);
 
-        ModelAndView actualModelAndView = eventsController.showEventById(1L);
+        ModelAndView actualModelAndView = eventsController.showEventById("1L");
 
-        verify(bookingFacade, times(1)).getEventById(anyLong());
+        verify(bookingFacade, times(1)).getEventById(anyString());
 
         assertEquals("event", actualModelAndView.getViewName());
         assertTrue(actualModelAndView.getModelMap().containsAttribute("event"));
@@ -56,23 +55,23 @@ public class EventsControllerTest {
 
     @Test
     public void showEventByIdWithNotExistingEventIdShouldReturnModelAndViewWithMessage() {
-        when(bookingFacade.getEventById(anyLong())).thenReturn(null);
+        when(bookingFacade.getEventById(anyString())).thenReturn(null);
 
-        ModelAndView actualModelAndView = eventsController.showEventById(1L);
+        ModelAndView actualModelAndView = eventsController.showEventById("1L");
 
-        verify(bookingFacade, times(1)).getEventById(anyLong());
+        verify(bookingFacade, times(1)).getEventById(anyString());
 
         ModelMap actualModelMap = actualModelAndView.getModelMap();
 
         assertEquals("event", actualModelAndView.getViewName());
         assertFalse(actualModelMap.containsAttribute("event"));
         assertTrue(actualModelMap.containsAttribute("message"));
-        assertEquals("Can not to get an event by id: 1", actualModelMap.getAttribute("message"));
+        assertEquals("Can not to get an event by id: 1L", actualModelMap.getAttribute("message"));
     }
 
     @Test
     public void showEventsByTitleWithExistingEventTitleShouldReturnModelAndViewWithListOfEvents() {
-        Event event = new Event(1L, "Test event", new Date(System.currentTimeMillis()), BigDecimal.ONE);
+        Event event = new Event("1L", "Test event", new Date(System.currentTimeMillis()), BigDecimal.ONE);
 
         when(bookingFacade.getEventsByTitle(anyString(), anyInt(), anyInt()))
                 .thenReturn(Collections.singletonList(event));
@@ -104,7 +103,7 @@ public class EventsControllerTest {
 
     @Test
     public void showEventsForDayWithCorrectDateFormatAndExistingDayShouldReturnModelAndViewWithListOfEvents() {
-        Event event = new Event(1L, "Test event", new Date(System.currentTimeMillis()), BigDecimal.ONE);
+        Event event = new Event("1L", "Test event", new Date(System.currentTimeMillis()), BigDecimal.ONE);
 
         when(bookingFacade.getEventsForDay(any(), anyInt(), anyInt())).thenReturn(Collections.singletonList(event));
 
@@ -152,7 +151,7 @@ public class EventsControllerTest {
 
     @Test
     public void createEventWithCorrectFormatOfDateShouldReturnModelAndViewWithEvent() {
-        Event event = new Event(1L, "Test event", new Date(System.currentTimeMillis()), BigDecimal.ONE);
+        Event event = new Event("1L", "Test event", new Date(System.currentTimeMillis()), BigDecimal.ONE);
 
         when(bookingFacade.createEvent(any())).thenReturn(event);
 
@@ -199,11 +198,11 @@ public class EventsControllerTest {
 
     @Test
     public void updateEventWithCorrectDateFormatShouldReturnModelAndViewWithEvent() {
-        Event event = new Event(1L, "Test event", new Date(System.currentTimeMillis()), BigDecimal.ONE);
+        Event event = new Event("1L", "Test event", new Date(System.currentTimeMillis()), BigDecimal.ONE);
 
         when(bookingFacade.updateEvent(any())).thenReturn(event);
 
-        ModelAndView actualModelAndView = eventsController.updateEvent(1L, "Test title", "18-05-2022 15:30", BigDecimal.ZERO);
+        ModelAndView actualModelAndView = eventsController.updateEvent("1L", "Test title", "18-05-2022 15:30", BigDecimal.ZERO);
 
         verify(bookingFacade, times(1)).updateEvent(any());
 
@@ -218,7 +217,7 @@ public class EventsControllerTest {
     public void updateEventWithCorrectDateFormatShouldReturnModelAndViewWithMessage() {
         when(bookingFacade.updateEvent(any())).thenReturn(null);
 
-        ModelAndView actualModelAndView = eventsController.updateEvent(1L, "Test title", "18-05-2022 15:30", BigDecimal.ZERO);
+        ModelAndView actualModelAndView = eventsController.updateEvent("1L", "Test title", "18-05-2022 15:30", BigDecimal.ZERO);
 
         verify(bookingFacade, times(1)).updateEvent(any());
 
@@ -227,12 +226,12 @@ public class EventsControllerTest {
         assertEquals("event", actualModelAndView.getViewName());
         assertFalse(actualModelMap.containsAttribute("event"));
         assertTrue(actualModelMap.containsAttribute("message"));
-        assertEquals("Can not to update an event with id: 1", actualModelMap.getAttribute("message"));
+        assertEquals("Can not to update an event with id: 1L", actualModelMap.getAttribute("message"));
     }
 
     @Test
     public void updateEventWithWrongDateFormatShouldReturnModelAndViewWithMessage() {
-        ModelAndView actualModelAndView = eventsController.updateEvent(1L, "Test title", "18.05-2022 15:30", BigDecimal.ZERO);
+        ModelAndView actualModelAndView = eventsController.updateEvent("1L", "Test title", "18.05-2022 15:30", BigDecimal.ZERO);
 
         verify(bookingFacade, times(0)).updateEvent(any());
 
@@ -246,27 +245,27 @@ public class EventsControllerTest {
 
     @Test
     public void deleteEventWithExistingEventIdShouldReturnModelAndViewWithPositiveMessage() {
-        when(bookingFacade.deleteEvent(anyLong())).thenReturn(true);
+        when(bookingFacade.deleteEvent(anyString())).thenReturn(true);
 
-        ModelAndView actualModelAndView = eventsController.deleteEvent(1L);
+        ModelAndView actualModelAndView = eventsController.deleteEvent("1L");
 
-        verify(bookingFacade, times(1)).deleteEvent(anyLong());
+        verify(bookingFacade, times(1)).deleteEvent(anyString());
 
         assertEquals("event", actualModelAndView.getViewName());
         assertTrue(actualModelAndView.getModelMap().containsAttribute("message"));
-        assertEquals("The event with id 1 successfully deleted", actualModelAndView.getModelMap().getAttribute("message"));
+        assertEquals("The event with id 1L successfully deleted", actualModelAndView.getModelMap().getAttribute("message"));
     }
 
     @Test
     public void deleteEventWithExistingEventIdShouldReturnModelAndViewWithNegativeMessage() {
-        when(bookingFacade.deleteEvent(anyLong())).thenReturn(false);
+        when(bookingFacade.deleteEvent(anyString())).thenReturn(false);
 
-        ModelAndView actualModelAndView = eventsController.deleteEvent(1L);
+        ModelAndView actualModelAndView = eventsController.deleteEvent("1L");
 
-        verify(bookingFacade, times(1)).deleteEvent(anyLong());
+        verify(bookingFacade, times(1)).deleteEvent(anyString());
 
         assertEquals("event", actualModelAndView.getViewName());
         assertTrue(actualModelAndView.getModelMap().containsAttribute("message"));
-        assertEquals("The event with id 1 not deleted", actualModelAndView.getModelMap().getAttribute("message"));
+        assertEquals("The event with id 1L not deleted", actualModelAndView.getModelMap().getAttribute("message"));
     }
 }

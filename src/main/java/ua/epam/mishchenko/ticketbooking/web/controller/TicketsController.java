@@ -14,7 +14,6 @@ import ua.epam.mishchenko.ticketbooking.facade.impl.BookingFacadeImpl;
 import ua.epam.mishchenko.ticketbooking.model.Category;
 import ua.epam.mishchenko.ticketbooking.model.Event;
 import ua.epam.mishchenko.ticketbooking.model.Ticket;
-import ua.epam.mishchenko.ticketbooking.model.User;
 
 import java.util.HashMap;
 import java.util.List;
@@ -56,8 +55,8 @@ public class TicketsController {
      * @return the model and view
      */
     @PostMapping
-    public ModelAndView bookTicket(@RequestParam long userId,
-                                   @RequestParam long eventId,
+    public ModelAndView bookTicket(@RequestParam String userId,
+                                   @RequestParam String eventId,
                                    @RequestParam int place,
                                    @RequestParam Category category) {
         log.info("Booking a ticket: userId={}, eventId={}, place={}, category={}", userId, eventId, place, category);
@@ -93,17 +92,16 @@ public class TicketsController {
      * @return the model and view
      */
     @GetMapping("/user/{userId}")
-    public ModelAndView showTicketsByUser(@PathVariable long userId,
+    public ModelAndView showTicketsByUser(@PathVariable String userId,
                                           @RequestParam int pageSize,
                                           @RequestParam int pageNum) {
         log.info("Showing the tickets by user with id: {}", userId);
         Map<String, Object> model = new HashMap<>();
-        User userById = bookingFacade.getUserById(userId);
-        if (isNull(userById)) {
+        if (isNull(userId)) {
             model.put("message", "Can not to find a user by id: " + userId);
             log.info("Can not to find a user by id: {}", userId);
         } else {
-            List<Ticket> bookedTickets = bookingFacade.getBookedTickets(userById, pageSize, pageNum);
+            List<Ticket> bookedTickets = bookingFacade.getBookedTicketsByUserId(userId, pageSize, pageNum);
             if (bookedTickets.isEmpty()) {
                 model.put("message", "Can not to find the tickets by user with id: " + userId);
                 log.info("Can not to find the tickets by user with id: {}", userId);
@@ -124,7 +122,7 @@ public class TicketsController {
      * @return the model and view
      */
     @GetMapping("/event/{eventId}")
-    public ModelAndView showTicketsByEvent(@PathVariable long eventId,
+    public ModelAndView showTicketsByEvent(@PathVariable String eventId,
                                            @RequestParam int pageSize,
                                            @RequestParam int pageNum) {
         log.info("Showing the tickets by event with id: {}", eventId);
@@ -134,7 +132,7 @@ public class TicketsController {
             model.put("message", "Can not to find an event by id: " + eventId);
             log.info("Can not to find an event by id: {}", eventId);
         } else {
-            List<Ticket> bookedTickets = bookingFacade.getBookedTickets(eventById, pageSize, pageNum);
+            List<Ticket> bookedTickets = bookingFacade.getBookedTicketsByEventId(eventId, pageSize, pageNum);
             if (bookedTickets.isEmpty()) {
                 model.put("message", "Can not to find the tickets by event with id: " + eventId);
                 log.info("Can not to find the tickets by event with id: {}", eventId);
@@ -153,7 +151,7 @@ public class TicketsController {
      * @return the model and view
      */
     @DeleteMapping("/{id}")
-    public ModelAndView cancelTicket(@PathVariable long id) {
+    public ModelAndView cancelTicket(@PathVariable String id) {
         log.info("Canceling ticket with id: {}", id);
         Map<String, Object> model = new HashMap<>();
         boolean isTicketCanceled = bookingFacade.cancelTicket(id);

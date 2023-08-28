@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
      * @return the user by id
      */
     @Override
-    public User getUserById(long userId) {
+    public User getUserById(String userId) {
         log.info("Finding a user by id: {}", userId);
         try {
             User user = userRepository.findById(userId)
@@ -121,9 +121,10 @@ public class UserServiceImpl implements UserService {
             }
             if (userExistsByEmail(user)) {
                 log.debug("This email already exists");
+            }else{
+                user = userRepository.save(user);
+                log.info("Successfully creation of the user: {}", user);
             }
-            user = userRepository.save(user);
-            log.info("Successfully creation of the user: {}", user);
             return user;
         } catch (RuntimeException e) {
             log.warn("Can not to create an user: {}", user, e);
@@ -185,7 +186,7 @@ public class UserServiceImpl implements UserService {
      * @return the boolean
      */
     @Override
-    public boolean deleteUser(long userId) {
+    public boolean deleteUser(String userId) {
         log.info("Start deleting an user with id: {}", userId);
         try {
             userRepository.deleteById(userId);
