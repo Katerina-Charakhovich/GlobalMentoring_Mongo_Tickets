@@ -1,0 +1,6 @@
+{"_id":"1","title":"First event","date":"2022-05-18T15:30:00","ticket_price":100.00,"tickets":[{"id":"1"},{"id":"5"}]}
+{"_id":"2","title":"Second event","date":"2022-05-15T21:00:00","ticket_price":300.00,"tickets":[{"id":"3"}]}
+{"_id":"3","title":"Third event","date":"2022-05-16T12:00:00","ticket_price":500.00,"tickets":[{"id":"2"}]}
+{"_id":"4","title":"Fourth event","date":"2022-05-15T21:00:00","ticket_price":450.00,"tickets":[{"id":"4"}]}
+{"_id":"5","title":"Third event","date":"2022-05-25T09:10:00","ticket_price":1000.00,"tickets":[{"id":"6"}]}
+{"_id":"6","title":"Fifth event","date":"2022-06-01T14:20:00","ticket_price":230.00,"tickets":null}

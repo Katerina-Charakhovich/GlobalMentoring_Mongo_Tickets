@@ -1,0 +1,6 @@
+{"_id":"1","name":"Alan","email":"alan@gmail.com","account":1000.00,"tickets":[{"id":"1"},{"id":"4"}]}
+{"_id":"2","name":"Kate","email":"kate@gmail.com","account":1500.00,"tickets":[{"id":"3"}]}
+{"_id":"3","name":"Max","email":"max@gmail.com","account":null,"tickets":[{"id":"6"}]}
+{"_id":"4","name":"Sara","email":"sara@gmail.com","account":null,"tickets":[{"id":"2"}]}
+{"_id":"5","name":"Alex","email":"alex@gmail.com","account":null,"tickets":[{"id":"5"}]}
+{"_id":"6","name":"Alex","email":"anotheralex@gmail.com","account":null,"tickets":null}
